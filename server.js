@@ -37,7 +37,7 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
-      const message = `Missing \`${field}\` in request body`
+      const message = `Missing \`${field}\` in request body`;
       console.error(message);
       return res.status(400).send(message);
     }
@@ -106,7 +106,7 @@ app.post('/recipes', jsonParser, (req, res) => {
 });
 
 app.put('/recipes/:id', jsonParser, (req, res) => {
-  const requiredFields = ['name', 'ingredients', 'id'];
+  const requiredFields = ['id','name', 'ingredients'];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -114,20 +114,20 @@ app.put('/recipes/:id', jsonParser, (req, res) => {
       console.error(message);
       return res.status(400).send(message);
     }
-
-    if(req.params.id !== req.body.id){
-      const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
-      console.error(message);
-      res.status(400).send(message);
-    }
-    console.log(`Updating recipes list item \`${req.params.id}\``);
-    Recipes.update({
-      id: req.params.id,
-      name: req.body.name,
-      ingredients: req.body.ingredients
-    });
-    res.status(204).end();
   }
+
+  if(req.params.id !== req.body.id){
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+    console.error(message);
+    res.status(400).send(message);
+  }
+  console.log(`Updating recipes list item \`${req.params.id}\``);
+  Recipes.update({
+    id: req.params.id,
+    name: req.body.name,
+    ingredients: req.body.ingredients
+  });
+  res.status(204).end();
 
   const item = ShoppingList.create(req.body.name, req.body.budget);
   res.status(201).json(item);
